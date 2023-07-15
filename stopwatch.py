@@ -4,6 +4,7 @@ from math import floor
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import itertools
+import time
 
     
 def format_time(milli):
@@ -14,26 +15,28 @@ def format_time(milli):
     return (minutes + ":" + seconds + "." + milliseconds)[:-1]
 
 def stopwatch_label(label):
+    start_time = time.time()
     def count():
         if running:
             global counter
+            counter = round(((time.time() - start_time) * 1000))
             display = format_time(counter)
-   
-            label['text']=display
-            label.after(1, count) 
-            counter += 1
-   
-    count()     
+
+            label['text'] = display
+            label.after(1, count)
+    
+    count()
 
 
 def start(event=None):
     global running
     running = True
     stopwatch_label(stopwatch)
-    start_button['state']='disabled'
+    start_button['state'] = 'disabled'
     lap_button['state'] = 'normal'
-    stop_button['state']='normal'
-    reset_button['state']='normal'
+    stop_button['state'] = 'normal'
+    reset_button['state'] = 'normal'
+
 
 def lap(event=None):
     global lap_count
